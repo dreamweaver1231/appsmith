@@ -18,6 +18,8 @@ import { AutocompleteDataType } from "utils/autocomplete/TernServer";
 import { NavigationTargetType } from "sagas/ActionExecution/NavigateActionSaga";
 import Switcher, { Switch, SwitcherProps } from "components/ads/Switcher";
 import DividerComponent from "../../../widgets/DividerWidget/component";
+import store from "store";
+import { getPageList } from "../../../selectors/entitiesSelector";
 
 /* eslint-disable @typescript-eslint/ban-types */
 /* TODO: Function and object types need to be updated to enable the lint rule */
@@ -272,7 +274,7 @@ type TextViewProps = ViewProps & {
   index?: number;
   additionalAutoComplete?: Record<string, Record<string, unknown>>;
 };
-type TabViewProps = ViewProps & SwitcherProps;
+type TabViewProps = Omit<ViewProps, "get" | "set"> & SwitcherProps;
 
 const views = {
   [ViewTypes.SELECTOR_VIEW]: function SelectorView(props: SelectorViewProps) {
@@ -489,10 +491,12 @@ const fieldConfigs: FieldConfigs = {
   },
   [FieldType.URL_FIELD]: {
     getter: (value: string) => {
-      return textGetter(value, 0);
+      const appState = store.getState();
+      const pageList = getPageList(appState).map((page) => page.pageName);
+      const urlFieldValue = textGetter(value, 0);
+      return pageList.includes(urlFieldValue) ? "" : urlFieldValue;
     },
     setter: (value: string, currentValue: string) => {
-      // TODO - check if url and then set
       return textSetter(value, currentValue, 0);
     },
     view: ViewTypes.TEXT_VIEW,
@@ -808,12 +812,6 @@ function renderField(props: {
         activeObj: props.activeNavigateToTab,
         switches: props.navigateToSwitches,
         label: "Type",
-        get: (e: any) => {
-          console.log(e);
-        },
-        set: (e: any) => {
-          console.log(e);
-        },
         value: props.value,
       });
       break;
