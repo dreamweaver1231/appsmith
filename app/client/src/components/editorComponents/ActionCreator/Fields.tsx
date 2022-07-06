@@ -17,9 +17,9 @@ import { DropdownOption } from "components/constants";
 import { AutocompleteDataType } from "utils/autocomplete/TernServer";
 import { NavigationTargetType } from "sagas/ActionExecution/NavigateActionSaga";
 import Switcher, { Switch, SwitcherProps } from "components/ads/Switcher";
-import DividerComponent from "../../../widgets/DividerWidget/component";
+import DividerComponent from "widgets/DividerWidget/component";
 import store from "store";
-import { getPageList } from "../../../selectors/entitiesSelector";
+import { getPageList } from "selectors/entitiesSelector";
 
 /* eslint-disable @typescript-eslint/ban-types */
 /* TODO: Function and object types need to be updated to enable the lint rule */
@@ -676,7 +676,6 @@ const fieldConfigs: FieldConfigs = {
   },
 };
 
-// TODO - pass switcher values here and see how to render
 function renderField(props: {
   onValueChange: Function;
   value: string;
